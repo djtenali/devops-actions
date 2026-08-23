@@ -1,1 +1,1 @@
-This is the common repo for ' composite actions ' and ' Reusable workflows '
+This is the common repo for project ' composite actions ' and ' Reusable workflows '
