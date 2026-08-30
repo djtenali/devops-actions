@@ -53,6 +53,10 @@ runs:
       with:
         username: ${{ inputs.registry-username }}
         password: ${{ inputs.registry-password }}
+    - name: Calling the central Repo
+      shell: bash
+      run: |
+        echo "This is been called by the central repo"
 
     - name: List the files and path
       shell: bash                        # REQUIRED in composite actions
