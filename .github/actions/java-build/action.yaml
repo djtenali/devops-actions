@@ -1,0 +1,63 @@
+name: Java Build Action
+description: |
+  composite action for devops dashboard java services.
+  handles checkout,java setup, maven Build
+  eliminates repeated steps across workflows.
+inputs:
+  java-version:
+    description: Java Version to use
+    required: false # providing input is not mandatory
+    default: '21'
+  distribution:
+    description: Java distribution
+    required: false
+    default: 'temurin'
+  run-tests:
+    description: Run Tests before building(true/false)
+    required: false
+    default: 'true'
+  working-directory:
+    description: Directory to run the maven commands
+    required: false
+    default: '.'
+outputs: 
+  jar-path: 
+    description: Path to the build jar file
+    value: ${{steps.build.outputs.jar-path}}
+  test-result:
+    description: Result of the test run  - passed or skipped
+    value: ${{steps.test.outputs.result}}
+runs: 
+  using: composite
+  steps:   
+    - name: Setup Java ${{ inputs.java-version}}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{inputs.java-version}}
+        distribution: ${{inputs.distribution}}
+        cache: maven
+    - name: Run Tests
+      id: test
+      if: inputs.run-tests == 'true'
+      shell: bash
+      working-directory: ${{inputs.working-directory}}
+      run: |
+        mvn test
+        echo "result=passed" >> $GITHUB_OUTPUT
+    - name: set test skipped output
+      id: tests
+      if: inputs.run-tests != 'true'
+      shell: bash
+      run: echo "result-skipped" >> $GITHUB_OUTPUT
+    - name: Build Jar
+      id: build
+      shell: bash
+      working-directory: ${{inputs.working-directory}}
+      run: |
+        mvn package -DskipTests
+        JAR=$(find target -name "*.jar" | head -1)
+        echo "jar-path=$JAR" >> $GITHUB_OUTPUT
+        echo "Packaging done"
+        echo "Built Jar: $JAR"
+
+
