@@ -56,7 +56,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7    
       - name: Docker Build and Push
-        uses: ./.github/actions/docker-build-push
+        uses: ./.github/actions/docker-build-push/action.yaml@main
         with: 
           registry-username: ${{vars.DOCKERHUB_USERNAME}}
           registry-password: ${{secrets.DOCKERHUB_TOKEN}}
