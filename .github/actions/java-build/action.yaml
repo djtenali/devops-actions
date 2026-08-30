@@ -48,7 +48,7 @@ runs:
       id: tests
       if: inputs.run-tests != 'true'
       shell: bash
-      run: echo "result-skipped" >> $GITHUB_OUTPUT
+      run: echo "result=skipped" >> $GITHUB_OUTPUT
     - name: Build Jar
       id: build
       shell: bash
